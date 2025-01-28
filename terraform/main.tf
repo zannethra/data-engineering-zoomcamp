@@ -8,12 +8,12 @@ terraform {
 }
 
 provider "google" {
-  project = "taxi-rides-ny-449202"
-  region  = "us-central1"
+  project = var.gcp_project_id
+  region  = var.gcp_project_region
 }
 
 resource "google_storage_bucket" "ny-taxi-data" {
-  name          = "taxi-rides-ny-449202-ny-taxi-data"
+  name          = format("%s-%s", var.gcp_project_id, var.gcs_taxi_bucket)
   location      = var.gcp_location
   force_destroy = true
 
