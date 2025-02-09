@@ -151,7 +151,7 @@ Note: given the large dataset, we'll backfill only data for the green taxi datas
 
 The flow code: [`02_postgres_taxi_scheduled.yaml`](flows/02_postgres_taxi_scheduled.yaml).
 
-### Local DB: Orchestrate dbt Models
+### Local DB: Orchestrate dbt Models (Optional)
 
 Now that we have raw data ingested into a local Postgres database, we can use dbt to transform the data into meaningful insights. The flow will sync the dbt models from Git to Kestra and run the `dbt build` command to build the models.
 
@@ -237,7 +237,7 @@ Since we now process data in a cloud environment with infinitely scalable storag
 
 The flow code: [`06_gcp_taxi_scheduled.yaml`](flows/06_gcp_taxi_scheduled.yaml).
 
-### GCP Workflow: Orchestrate dbt Models
+### GCP Workflow: Orchestrate dbt Models (Optional)
 
 Now that we have raw data ingested into BigQuery, we can use dbt to transform that data. The flow will sync the dbt models from Git to Kestra and run the `dbt build` command to build the models:
 
@@ -253,9 +253,11 @@ The flow code: [`07_gcp_dbt.yaml`](flows/07_gcp_dbt.yaml).
 
 ---
 
-## 5. Bonus: Deploy to the Cloud
+## 5. Bonus: Deploy to the Cloud (Optional)
 
 Now that we've got our ETL pipeline working both locally and in the cloud, we can deploy Kestra to the cloud so it can continue to orchestrate our ETL pipelines monthly with our configured schedules, We'll cover how you can install Kestra on Google Cloud in Production, and automatically sync and deploy your workflows from a Git repository.
+
+Note: When commiting your workflows to Kestra, make sure your workflow doesn't contain any sensitive information. You can use [Secrets](https://go.kestra.io/de-zoomcamp/secret) and the [KV Store](https://go.kestra.io/de-zoomcamp/kv-store) to keep sensitive data out of your workflow logic.
 
 ### Videos
 
@@ -285,14 +287,6 @@ If you face any issues with Kestra flows in Module 2, make sure to use the follo
 - `kestra/kestra:latest` is correct = latest stable release, while `kestra/kestra:develop` is incorrect as this is a bleeding-edge development version that might contain bugs
 - `postgres:latest` — make sure to use Postgres image, which uses **PostgreSQL 15** or higher
 - If you run `pgAdmin` or something else on port 8080, you can adjust Kestra docker-compose to use a different port, e.g. change port mapping to 18080 instead of 8080, and then access Kestra UI in your browser from http://localhost:18080/ instead of from http://localhost:8080/
-
-If you are still facing any issues, stop and remove your existing Kestra + Postgres containers and start them again using `docker-compose up -d`. If this doesn't help, post your question on the DataTalksClub Slack or on Kestra's Slack http://kestra.io/slack.
-
-- **DE Zoomcamp FAQ - PostgresDB Setup and Installing pgAdmin**   
-  [![DE Zoomcamp FAQ - PostgresDB Setup and Installing pgAdmin](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FywAPYNYFaB4%3Fsi%3D5X9AD0nFAT2WLWgS)](https://youtu.be/ywAPYNYFaB4?si=5X9AD0nFAT2WLWgS)
-- **DE Zoomcamp FAQ - Docker Setup**  
-  [![DE Zoomcamp FAQ - Docker Setup](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fl2M2mW76RIU%3Fsi%3DoqyZ7KUaI27vi90V)](https://youtu.be/l2M2mW76RIU?si=oqyZ7KUaI27vi90V)
-
 
 If you're using Linux, you might encounter `Connection Refused` errors when connecting to the Postgres DB from within Kestra. This is because `host.docker.internal` works differently on Linux. Using the modified Docker Compose file below, you can run both Kestra and its dedicated Postgres DB, as well as the Postgres DB for the exercises all together. You can access it within Kestra by referring to the container name `postgres_zoomcamp` instead of `host.docker.internal` in `pluginDefaults`. This applies to pgAdmin as well. If you'd prefer to keep it in separate Docker Compose files, you'll need to setup a Docker network so that they can communicate with each other.
 
@@ -404,6 +398,17 @@ services:
 
 </details>
 
+If you are still facing any issues, stop and remove your existing Kestra + Postgres containers and start them again using `docker-compose up -d`. If this doesn't help, post your question on the DataTalksClub Slack or on Kestra's Slack http://kestra.io/slack.
+
+- **DE Zoomcamp FAQ - PostgresDB Setup and Installing pgAdmin**   
+  [![DE Zoomcamp FAQ - PostgresDB Setup and Installing pgAdmin](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2FywAPYNYFaB4%3Fsi%3D5X9AD0nFAT2WLWgS)](https://youtu.be/ywAPYNYFaB4?si=5X9AD0nFAT2WLWgS)
+- **DE Zoomcamp FAQ - Port and Images**  
+  [![DE Zoomcamp FAQ - Ports and Images](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2Fl2M2mW76RIU%3Fsi%3DoqyZ7KUaI27vi90V)](https://youtu.be/l2M2mW76RIU?si=oqyZ7KUaI27vi90V)
+- **DE Zoomcamp FAQ - Docker Setup**  
+  [![DE Zoomcamp FAQ - Docker Setup](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2F73g6qJN0HcM)](https://youtu.be/73g6qJN0HcM)
+
+
+
 If you encounter similar errors to:
 ```
 BigQueryError{reason=invalid, location=null, 
@@ -431,6 +436,9 @@ Did you take notes? You can share them by creating a PR to this file!
 
 * [Notes from Manuel Guerra)](https://github.com/ManuelGuerra1987/data-engineering-zoomcamp-notes/blob/main/2_Workflow-Orchestration-(Kestra)/README.md)
 * [Notes from Horeb Seidou](https://spotted-hardhat-eea.notion.site/Week-2-Workflow-Orchestration-17129780dc4a80148debf61e6453fffe)
+* [Notes from Livia](https://docs.google.com/document/d/1Y_QMonvEtFPbXIzmdpCSVsKNC1BWAHFBA1mpK9qaZko/edit?usp=sharing)
+* [2025 Gitbook Notes from Tinker0425](https://data-engineering-zoomcamp-2025-t.gitbook.io/tinker0425/module-2/introduction-to-module-2)
+* [Notes from Mercy Markus: Linux/Fedora Tweaks and Tips](https://mercymarkus.com/posts/2025/series/dtc-dez-jan-2025/dtc-dez-2025-module-2/)
 * Add your notes above this line
 
 ---
